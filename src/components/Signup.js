@@ -1,24 +1,28 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
-const Login = () => {
+const Signup = () => {
+
+
   const handleGuestLogin = () => {
-    // logic to log in the user as a guest
-    // for example, you could set a flag in your state to indicate the user is logged in as a guest
+    <a href='/about'></a>
   }
 
   return (
         <div className="login__container">
-          <img className='login__logo'src={'https://cdn-icons-png.flaticon.com/512/3275/3275760.png'}></img>
-          <h1 className="login__title">Applewood</h1>
+          <h1 className="login__title"><img className='login__logo'src={'https://cdn-icons-png.flaticon.com/512/3275/3275760.png'}></img>Applewood</h1>
           <form className="login__form">
             <input className="login__input" type="text" placeholder="Username" />
             <input className="login__input" type="password" placeholder="Password" />
-            <button className="login__button">Login</button>
+            <input className="login__input" type="password" placeholder="Confirm Password" />
+            <div className="sign__up">Have an account? Login</div>
+            <button className="login__button">Sign Up</button>
           </form>
           <button className="login__guest-button" onClick={handleGuestLogin}>Continue as Guest</button>
         </div>
   )
 }
 
-export default Login
+export default Signup

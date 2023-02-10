@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 
+
 class Stock extends React.Component {
   constructor(props) {
     super(props);
@@ -42,9 +43,10 @@ class Stock extends React.Component {
       )
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.fetchStock();
+    handleSubmit = (event) => {
+      event.preventDefault();
+      this.fetchStock();  
+
   }
 
   handleChange = (event) => {
@@ -68,16 +70,17 @@ if (currentPrice > previousClose) {
        imageSrc = 'https://cdn-icons-png.flaticon.com/512/1356/1356479.png';
     }
     return (
-      <div className="App">
-        <Header/>
-        <img className='login__logo'src={'https://cdn-icons-png.flaticon.com/512/3275/3275760.png'}></img>
-        <h1 className = 'title'>Applewood</h1>
+      <>
+      <Header/>
+      <div className="login__container">
+        <h1 className = 'title'><img className='search__logo'src={'https://cdn-icons-png.flaticon.com/512/3275/3275760.png'}></img>Applewood</h1>
         <form onSubmit={this.handleSubmit}>
           <input className='search__field' type="text" value={this.state.stockSymbol} onChange={this.handleChange} placeholder="Enter your stock"/>
           <button className='login__button' type="submit">Submit</button>
         </form>
         <h2 className="stock__price" style={titleStyle}> <img className= 'stock__emoji'src={imageSrc}></img>{this.state.stockSymbol} - Current Price: ${currentPrice}</h2>
       </div>
+      </>
     )
   }
 }
