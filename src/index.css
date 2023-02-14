@@ -1,3 +1,45 @@
+@media only screen and (max-width: 500px) {
+  .login__button {
+    width: 10%;
+  }
+  .search__field {
+    width: 20%;
+  }
+  .login__container {
+    border: none !important;
+  }
+  .stock__container {
+    border: none !important;
+  }
+  .title {
+    font-size: 20px;
+  }
+  .search__logo {
+    height: 30px !important;
+    width: 30px !important;
+  }
+  .login__button {
+    width: 40% !important;
+  }
+  .search__field {
+    width: 30% !important;
+  }
+  .stock__price {
+    font-size: 15px;
+  }
+}
+  .login__input {
+    width: 30%;
+  }
+  
+  .login__button {
+    width: 30%;
+  }
+  
+  .header__search {
+    width:30%;
+  }
+
 body {
   margin: 0;
   padding:0;
@@ -8,6 +50,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
 }
+.body__wrapper{
+  background-color: black;
+}
+.light.header__wrapper{
+  background-color: white;
+}
+.light-mode {
+  background-color: white;
+}
+  
 .title{
   color: #f8c1a3;
   padding: 0;
@@ -21,27 +73,44 @@ code {
     monospace;
 }
 
-
 .btn:hover {
   background-color: #3e8e41;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 .stock__price{
-  color: #f8c1a3
+  color: #f8c1a3;
 }
 .login__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 50%;
-  height: 50%;
-  border: 10px solid #f8c1a3;
-  border-radius: 10px;
-  margin: auto;
+  
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 50%;
+    border: 10px solid #f8c1a3;
+    border-radius: 10px;
 }
 
+.stock__container{
+  position: absolute;
+  top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 10px solid #f8c1a3;
+    border-radius: 10px;
+    width: 60%;
+    height: 70%;
+}
 
 .login__title {
   font-size: 36px;
@@ -75,6 +144,9 @@ code {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  width:300px;
+  margin-bottom: 15px;
+
 }
 
 .login__guest-button {
@@ -84,7 +156,7 @@ border: none;
 border-radius: 5px;
 font-size: 16px;
 cursor: pointer;
-margin-top: 15px;
+margin-top: 20px;
 margin-bottom: 10px;
 }
 
@@ -116,7 +188,6 @@ padding: 10px 20px;
   height: 25px;
 }
 
-
 .header__wrapper {
   background-color: black;
   margin: 0;
@@ -126,7 +197,6 @@ padding: 10px 20px;
   align-items: center;
   padding: 15px;
 }
-
 
 .header__logo {
   margin-left: 48px;
@@ -168,26 +238,117 @@ padding: 10px 20px;
   outline: none;
 }
 
-.header__menuItems {
-  margin-right: 48px;
-}
-
 .header__menuItems a {
   font-weight: bold;
   color: white;
   text-decoration: none;
   padding: 0 10px;
+  margin-right: 48px;
 }
 
-.header__menuItems a:hover,
+.header__menuItems a:hover {
+  color: #f8c1a3;
+  transition: all 0.2s ease-in-out;
+  transform: scale(0.8);
+  }
 .header__menuItems a:active {
-  color: #f8c1a3
-}
-
-a:first-of-type {
-  color: #f8c1a3
+  color: #f8c1a3;
 }
 
 .stock__emoji{
   height:30px;
+}
+
+.google__button{
+  display:flex;
+  margin-top: 30px;
+}
+.watchlist__list-item {
+  color: white;
+}
+
+.login__signup{
+  color:White;
+  margin-bottom: 10px;
+  margin-top: -10px;
+}
+
+.watchlist__title{
+  color:White;
+}
+
+.buy__shares{
+  margin-top: 20px;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.ticker{
+  padding:5rem;
+  justify-content: absolute;
+  height:auto;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.searchBtn{
+  background-color: #f8c1a3;
+  font-family:poppins;
+  cursor:pointer;
+}
+
+.stockInput{
+border-radius: 4px;
+};
+
+.sign__up{
+  color: white;
+  margin-top: -10px;
+  margin-bottom: 30px;
+}
+
+.buy-shares{
+  color:#f8c1a3
+}
+.sign__up-text{
+  color:White;
+}
+
+.news__title{
+  color:#f8c1a3;
+  text-align: center;
+}
+.reset__button{
+  padding: 10px 20px;
+  background-color: #f8c1a3;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  width:200px;
+  margin-bottom: 15px;
 }
