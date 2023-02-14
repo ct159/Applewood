@@ -17,11 +17,7 @@ class BuyShares extends React.Component {
     localStorage.removeItem("portfolio");
     localStorage.setItem("funds", 10000);
     this.setState({ funds: 10000, currentShares: 0, portfolio: [] });
-    
 };
-
-  
-  
 
   componentDidMount() {
     const state = localStorage.getItem('state');
