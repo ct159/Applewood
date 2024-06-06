@@ -49,7 +49,7 @@ class Stock extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.fetchStock();  
+    this.fetchStock();
   };
 
   handleChange = (event) => {
@@ -112,4 +112,3 @@ class Stock extends React.Component {
 }
 
 export default Stock;
-
