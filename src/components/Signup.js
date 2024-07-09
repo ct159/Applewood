@@ -72,7 +72,7 @@ const Signup = () => {
           className="login__input"
           type="password"
           placeholder="Confirm Password"
-          
+
         />
         <div className="login__signup">
           Have an account? <Link to="/">Login</Link>

@@ -2,7 +2,6 @@ import React from "react";
 import Header from "./components/Header";
 import BuyShares from "./components/BuyShares";
 
-
 class Stock extends React.Component {
   constructor(props) {
     super(props);
@@ -16,51 +15,59 @@ class Stock extends React.Component {
     this.fetchStock();
     setInterval(() => {
       this.fetchStock();
-    }, 5000);
+    }, 10000);
   }
 
   fetchStock() {
-    const pointerToThis = this;
-    console.log(pointerToThis);
-    const API_KEY = 'cfi9p11r01qq9nt1vfk0cfi9p11r01qq9nt1vfkg';
-    let API_Call = `https://finnhub.io/api/v1/stock/candle?symbol=${this.state.stockSymbol}&resolution=D&from=${Math.round((new Date().getTime() - 5 * 365 * 24 * 60 * 60 * 1000) / 1000)}&to=${Math.round(new Date().getTime() / 1000)}&token=${API_KEY}`;
-    let stockChartYValuesFunction = [];
+    const API_KEY = 'rLhtlyZIbP2U9Alhg48l13c4wQEj03IXaK5RfXBr';
+    const symbol = this.state.stockSymbol;
+    const interval = '1min';
+    const url = `https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${symbol}`;
 
-    fetch(API_Call)
-      .then(
-        function(response) {
-          return response.json();
+    fetch(url, {
+      headers: {
+        'x-api-key': API_KEY
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      )
-      .then(
-        function(data) {
-          console.log(data);
+        return response.json();
+      })
+      .then(data => {
 
-          for (var key in data['c']) {
-            stockChartYValuesFunction.push(data['c'][key]);
-          }
+        const closePrices = Object.values(data).map(item => parseFloat(item['regularMarketPrice']));
 
-          pointerToThis.setState({
-            stockChartYValues: stockChartYValuesFunction
-          });
-        }
-      );
+        this.setState({
+          stockChartYValues: closePrices
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching stock data:', error);
+      });
   }
+
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.fetchStock();  
+    this.fetchStock();
   };
 
   handleChange = (event) => {
     this.setState({ stockSymbol: event.target.value });
   }
+
   render() {
     let currentPrice = this.state.stockChartYValues[this.state.stockChartYValues.length - 1];
     let previousClose = this.state.stockChartYValues[this.state.stockChartYValues.length - 2];
     let imageSrc;
     let titleStyle = {};
-    let percentageChange = ((currentPrice - previousClose) / previousClose) * 100;
+    let percentageChange = 0;
+
+    if (previousClose !== undefined && previousClose !== 0) {
+      percentageChange = ((currentPrice - previousClose) / previousClose) * 100;
+    }
 
     if (currentPrice > previousClose) {
       titleStyle = { color: 'green' };
@@ -109,7 +116,7 @@ class Stock extends React.Component {
       </>
     );
   }
+
 }
 
 export default Stock;
-

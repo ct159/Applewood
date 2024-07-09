@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const PL = (props) => {
   let change = 0;
   if (Array.isArray(props.stocks)) {

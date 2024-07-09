@@ -17,11 +17,11 @@ class BuyShares extends React.Component {
     localStorage.removeItem("portfolio");
     localStorage.setItem("funds", 10000);
     this.setState({ funds: 10000, currentShares: 0, portfolio: [] });
-    
+
 };
 
-  
-  
+
+
 
   componentDidMount() {
     const state = localStorage.getItem('state');
@@ -62,20 +62,20 @@ class BuyShares extends React.Component {
 
   handleSellSubmit = (event) => {
     event.preventDefault();
-    
+
     let stockIndex = this.state.portfolio.findIndex(item => item.symbol === this.props.symbol);
-    
+
     if (stockIndex >= 0 && this.state.sellShares <= this.state.portfolio[stockIndex].shares) {
       let newFunds = this.state.funds + (this.state.sellShares * this.props.currentPrice);
       let updatedShares = this.state.portfolio[stockIndex].shares - this.state.sellShares;
-      
+
       let updatedPortfolio = [...this.state.portfolio];
       if (updatedShares === 0) {
         updatedPortfolio.splice(stockIndex, 1);
       } else {
         updatedPortfolio[stockIndex].shares = updatedShares;
       }
-      
+
       this.setState({
         funds: newFunds,
         currentShares: this.state.currentShares - this.state.sellShares,
@@ -92,7 +92,7 @@ class BuyShares extends React.Component {
         portfolio[item.symbol] = item.shares;
       }
     });
-  
+
     return (
       <div className="buy-shares">
         <h3 className="buy-shares">Buy Shares</h3>
