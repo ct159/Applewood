@@ -21,8 +21,6 @@ class BuyShares extends React.Component {
 };
 
 
-
-
   componentDidMount() {
     const state = localStorage.getItem('state');
     if (state) {

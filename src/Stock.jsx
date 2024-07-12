@@ -6,7 +6,7 @@ class Stock extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      stockChartYValues: [],
+      stockPrice: null,
       stockSymbol: 'TSLA'
     };
   }
@@ -15,13 +15,12 @@ class Stock extends React.Component {
     this.fetchStock();
     setInterval(() => {
       this.fetchStock();
-    }, 10000);
+    }, 60000);
   }
 
   fetchStock() {
     const API_KEY = 'rLhtlyZIbP2U9Alhg48l13c4wQEj03IXaK5RfXBr';
     const symbol = this.state.stockSymbol;
-    const interval = '1min';
     const url = `https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${symbol}`;
 
     fetch(url, {
@@ -36,18 +35,19 @@ class Stock extends React.Component {
         return response.json();
       })
       .then(data => {
-
-        const closePrices = Object.values(data).map(item => parseFloat(item['regularMarketPrice']));
-
-        this.setState({
-          stockChartYValues: closePrices
-        });
+        const price = data?.quoteResponse?.result?.[0]?.regularMarketPrice;
+        if (price) {
+          this.setState({
+            stockPrice: price
+          });
+        } else {
+          throw new Error('Unable to get stock price from response');
+        }
       })
       .catch(error => {
         console.error('Error fetching stock data:', error);
       });
   }
-
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -59,25 +59,11 @@ class Stock extends React.Component {
   }
 
   render() {
-    let currentPrice = this.state.stockChartYValues[this.state.stockChartYValues.length - 1];
-    let previousClose = this.state.stockChartYValues[this.state.stockChartYValues.length - 2];
-    let imageSrc;
-    let titleStyle = {};
-    let percentageChange = 0;
+    const { stockPrice, stockSymbol } = this.state;
+    let priceDisplay = 'Loading...';
 
-    if (previousClose !== undefined && previousClose !== 0) {
-      percentageChange = ((currentPrice - previousClose) / previousClose) * 100;
-    }
-
-    if (currentPrice > previousClose) {
-      titleStyle = { color: 'green' };
-    } else {
-      titleStyle = { color: 'red' };
-    }
-    if (currentPrice < previousClose) {
-      imageSrc = 'https://cdn-icons-png.flaticon.com/512/4951/4951989.png';
-    } else {
-      imageSrc = 'https://cdn-icons-png.flaticon.com/512/1356/1356479.png';
+    if (stockPrice !== null) {
+      priceDisplay = `$${stockPrice}`;
     }
 
     return (
@@ -88,14 +74,15 @@ class Stock extends React.Component {
             <img
               className="search__logo"
               src={"https://cdn-icons-png.flaticon.com/512/3275/3275760.png"}
-            ></img>
+              alt="Logo"
+            />
             Applewood
           </h1>
           <form onSubmit={this.handleSubmit}>
             <input
               className="search__field"
               type="text"
-              value={this.state.stockSymbol}
+              value={stockSymbol}
               onChange={this.handleChange}
               placeholder="Enter your stock"
             />
@@ -103,14 +90,12 @@ class Stock extends React.Component {
               Submit
             </button>
           </form>
-          <h2 className="stock__price" style={titleStyle}>
-            <img className="stock__emoji" src={imageSrc}></img>
-            {this.state.stockSymbol} - Current Price: ${currentPrice} (
-            {percentageChange.toFixed(2)}%)
+          <h2 className="stock__price">
+            {stockSymbol} - Current Price: {priceDisplay}
           </h2>
           <BuyShares
-            currentPrice={currentPrice}
-            symbol={this.state.stockSymbol}
+            currentPrice={stockPrice}
+            symbol={stockSymbol}
           />
         </div>
       </>
