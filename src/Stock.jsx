@@ -19,7 +19,7 @@ class Stock extends React.Component {
   }
 
   fetchStock() {
-    const API_KEY = 'rLhtlyZIbP2U9Alhg48l13c4wQEj03IXaK5RfXBr';
+    const API_KEY = process.env.REACT_APP_API_KEY
     const symbol = this.state.stockSymbol;
     const url = `https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${symbol}`;
 

@@ -31,11 +31,11 @@
   .login__input {
     width: 30%;
   }
-  
+
   .login__button {
     width: 30%;
   }
-  
+
   .header__search {
     width:30%;
   }
@@ -59,7 +59,7 @@ body {
 .light-mode {
   background-color: white;
 }
-  
+
 .title{
   color: #f8c1a3;
   padding: 0;
@@ -82,7 +82,7 @@ code {
   color: #f8c1a3;
 }
 .login__container {
-  
+
     position: absolute;
     top: 50%;
     left: 50%;
