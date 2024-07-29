@@ -1,5 +1,6 @@
 import React from 'react';
-import PL from './PL'
+import PL from './PL';
+import TransactionList from './TransActionList';
 
 class BuyShares extends React.Component {
   constructor(props) {
@@ -9,17 +10,11 @@ class BuyShares extends React.Component {
       sellShares: 0,
       funds: 10000,
       currentShares: 0,
-      portfolio: []
+      portfolio: [],
+      transactions: [],
+      showTransactions: false,
     };
   }
-  resetFunds = () => {
-    localStorage.removeItem("funds");
-    localStorage.removeItem("portfolio");
-    localStorage.setItem("funds", 10000);
-    this.setState({ funds: 10000, currentShares: 0, portfolio: [] });
-
-};
-
 
   componentDidMount() {
     const state = localStorage.getItem('state');
@@ -33,6 +28,13 @@ class BuyShares extends React.Component {
       localStorage.setItem('state', JSON.stringify(this.state));
     }
   }
+
+  resetFunds = () => {
+    localStorage.removeItem("funds");
+    localStorage.removeItem("portfolio");
+    localStorage.setItem("funds", 10000);
+    this.setState({ funds: 10000, currentShares: 0, portfolio: [] });
+  };
 
   handleBuyChange = (event) => {
     let value = event.target.value;
@@ -53,27 +55,23 @@ class BuyShares extends React.Component {
       this.setState({
         funds: newFunds,
         currentShares: this.state.currentShares + this.state.buyShares,
-        portfolio: [...this.state.portfolio, {symbol: this.props.symbol, shares: this.state.buyShares}]
+        portfolio: [...this.state.portfolio, { symbol: this.props.symbol, shares: this.state.buyShares }]
       });
     }
   }
 
   handleSellSubmit = (event) => {
     event.preventDefault();
-
     let stockIndex = this.state.portfolio.findIndex(item => item.symbol === this.props.symbol);
-
     if (stockIndex >= 0 && this.state.sellShares <= this.state.portfolio[stockIndex].shares) {
       let newFunds = this.state.funds + (this.state.sellShares * this.props.currentPrice);
       let updatedShares = this.state.portfolio[stockIndex].shares - this.state.sellShares;
-
       let updatedPortfolio = [...this.state.portfolio];
       if (updatedShares === 0) {
         updatedPortfolio.splice(stockIndex, 1);
       } else {
         updatedPortfolio[stockIndex].shares = updatedShares;
       }
-
       this.setState({
         funds: newFunds,
         currentShares: this.state.currentShares - this.state.sellShares,
@@ -81,6 +79,19 @@ class BuyShares extends React.Component {
       });
     }
   }
+
+  fetchTransactions = () => {
+    fetch('/api/transactions')
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text) });
+        }
+        return response.json();
+      })
+      .then(data => this.setState({ transactions: data, showTransactions: true }))
+      .catch(error => console.error('Error fetching transactions:', error));
+  }
+
   render() {
     let portfolio = {};
     this.state.portfolio.forEach((item) => {
@@ -123,8 +134,11 @@ class BuyShares extends React.Component {
             <span key={index}>{symbol}: {shares} shares </span>
           ))}
         </p>
+        <button className="reset__button" onClick={this.fetchTransactions}>Show Transaction History</button>
+        {this.state.showTransactions && <TransactionList transactions={this.state.transactions} />}
       </div>
     );
   }
 }
-  export default BuyShares
+
+export default BuyShares;

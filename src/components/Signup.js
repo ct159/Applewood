@@ -1,28 +1,30 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { auth } from '../firebase-config'
-import { GoogleButton } from 'react-google-button'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { GoogleButton } from 'react-google-button';
+import { auth } from '../firebase-config';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useAuth } from './AuthContext';
 
-const provider = new GoogleAuthProvider
-
-const signInWithGoogle = () =>{
-  signInWithPopup(auth, provider)
-}
-
+const provider = new GoogleAuthProvider();
 
 const Signup = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const register = async () => {
+  useEffect(() => {
+    if (user) {
+      navigate('/home');
+    }
+  }, [user, navigate]);
+
+  const register = async (event) => {
+    event.preventDefault();
     try {
-      await auth.createUserWithEmailAndPassword(registerEmail, registerPassword);
+      await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
       setErrorMessage("");
-      navigate('/');
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -30,15 +32,11 @@ const Signup = () => {
 
   const signInWithGoogle = async () => {
     try {
-      const provider = new auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
-      navigate('/');
+      await signInWithPopup(auth, provider);
     } catch (error) {
       setErrorMessage(error.message);
     }
   };
-
-  const navigate = useNavigate();
 
   const handleGuestLogin = () => {
     navigate('/home');
@@ -50,16 +48,18 @@ const Signup = () => {
         <img
           className="login__logo"
           src="https://cdn-icons-png.flaticon.com/512/3275/3275760.png"
+          alt="Applewood Logo"
         />
         Applewood
       </h1>
-      <form className="login__form">
+      <form className="login__form" onSubmit={register}>
         <input
           className="login__input"
-          type="text"
+          type="email"
           placeholder="Email"
           value={registerEmail}
           onChange={(e) => setRegisterEmail(e.target.value)}
+          required
         />
         <input
           className="login__input"
@@ -67,17 +67,18 @@ const Signup = () => {
           placeholder="Password"
           value={registerPassword}
           onChange={(e) => setRegisterPassword(e.target.value)}
+          required
         />
         <input
           className="login__input"
           type="password"
           placeholder="Confirm Password"
-
+          required
         />
         <div className="login__signup">
           Have an account? <Link to="/">Login</Link>
         </div>
-        <button className="login__button" onClick={register}>Sign Up</button>
+        <button className="login__button" type="submit">Sign Up</button>
         {errorMessage && <div className="error__message">{errorMessage}</div>}
         <GoogleButton onClick={signInWithGoogle} />
       </form>
@@ -87,4 +88,5 @@ const Signup = () => {
     </div>
   );
 };
-export default Signup
+
+export default Signup;
