@@ -1,16 +1,15 @@
-import React, { useState } from 'react';
-import Stock from './Stock';
+// src/App.js
+import React from 'react';
+import { AuthProvider } from './components/AuthContext';
+import Signup from './components/Signup';
 
 function App() {
-  const [stockPrice, setStockPrice] = useState("");
-
-  return (
-      <div className="Ticker">
-        <div className="App">
-      <Stock/>
-      </div>
-      </div>
-  );
+    return (
+        <AuthProvider>
+            <Signup />
+            {/* Other components */}
+        </AuthProvider>
+    );
 }
 
 export default App;

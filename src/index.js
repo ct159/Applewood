@@ -1,27 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import Login from './components/Login'
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import App from './App'; // This may not be needed if you are not using it
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Stock from './Stock';
-import Header from './components/Header';
+import Header from './components/Header'; // This may not be needed if you are not using it
 import Signup from './components/Signup';
 import News from './components/News';
+import { AuthProvider } from './components/AuthContext';
+import Login from './components/Login'; // Import Login
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <>
-  <BrowserRouter>
   <React.StrictMode>
-    <Routes>
-    <Route path ='/' element={<Login/>}></Route>
-    <Route path='/home' element={<Stock/>}/>
-    <Route path='/signup' element={<Signup/>}/>
-    <Route path='/news' element={<News/>}/>
-      </Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<Login />} />
+          <Route path='/home' element={<Stock />} />
+          <Route path='/signup' element={<Signup />} />
+          <Route path='/news' element={<News />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
-  </BrowserRouter>
-  </>
-
 );
