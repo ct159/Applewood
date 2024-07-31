@@ -21,5 +21,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// Export the AuthContext for use in other components
 export { AuthContext };
