@@ -1,6 +1,5 @@
 import React from 'react';
-import PL from './PL';
-import TransactionList from './TransActionList';
+import TransactionList from './TransactionList';
 
 class BuyShares extends React.Component {
   constructor(props) {
@@ -47,7 +46,7 @@ class BuyShares extends React.Component {
     this.setState({ sellShares: parseInt(event.target.value) });
   }
 
-  handleBuySubmit = (event) => {
+  handleBuySubmit = async (event) => {
     event.preventDefault();
     let cost = this.state.buyShares * this.props.currentPrice;
     let newFunds = this.state.funds - cost;
@@ -57,10 +56,23 @@ class BuyShares extends React.Component {
         currentShares: this.state.currentShares + this.state.buyShares,
         portfolio: [...this.state.portfolio, { symbol: this.props.symbol, shares: this.state.buyShares }]
       });
+
+      await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          holding_id: /* Obtain this ID based on your logic */,
+          transaction_type: 'BUY',
+          quantity: this.state.buyShares,
+          transaction_price: this.props.currentPrice
+        })
+      }).catch(error => console.error('Error posting transaction:', error));
     }
   }
 
-  handleSellSubmit = (event) => {
+  handleSellSubmit = async (event) => {
     event.preventDefault();
     let stockIndex = this.state.portfolio.findIndex(item => item.symbol === this.props.symbol);
     if (stockIndex >= 0 && this.state.sellShares <= this.state.portfolio[stockIndex].shares) {
@@ -77,6 +89,19 @@ class BuyShares extends React.Component {
         currentShares: this.state.currentShares - this.state.sellShares,
         portfolio: updatedPortfolio
       });
+
+      await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          holding_id: /* Obtain this ID based on your logic */,
+          transaction_type: 'SELL',
+          quantity: this.state.sellShares,
+          transaction_price: this.props.currentPrice
+        })
+      }).catch(error => console.error('Error posting transaction:', error));
     }
   }
 

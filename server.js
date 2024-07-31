@@ -7,7 +7,6 @@ const redis = require('redis');
 const app = express();
 const port = 3000;
 
-
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://your-production-domain.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -17,12 +16,10 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
 });
 client.connect();
-
 
 const redisClient = redis.createClient();
 redisClient.on('error', (err) => {
@@ -32,7 +29,6 @@ redisClient.on('error', (err) => {
 
 app.get('/api/transactions', async (req, res) => {
   const cacheKey = 'transactions';
-
 
   redisClient.get(cacheKey, async (err, cachedData) => {
     if (err) {
@@ -56,8 +52,28 @@ app.get('/api/transactions', async (req, res) => {
 });
 
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.post('/api/transactions', async (req, res) => {
+  const { holding_id, transaction_type, quantity, transaction_price } = req.body;
 
+  if (!holding_id || !transaction_type || !quantity || !transaction_price) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  try {
+    const result = await client.query(
+      'INSERT INTO transactions (holding_id, transaction_type, quantity, transaction_price) VALUES ($1, $2, $3, $4) RETURNING *',
+      [holding_id, transaction_type, quantity, transaction_price]
+    );
+
+    redisClient.del('transactions');
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));

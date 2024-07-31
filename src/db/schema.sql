@@ -23,3 +23,12 @@ CREATE TABLE holdings (
     purchase_price DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+    holding_id INT NOT NULL REFERENCES holdings(id),
+    transaction_type VARCHAR(10) NOT NULL CHECK (transaction_type IN ('BUY', 'SELL')),
+    quantity INT NOT NULL,
+    transaction_price DECIMAL(10, 2) NOT NULL,
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
