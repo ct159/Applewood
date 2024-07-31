@@ -1,5 +1,5 @@
 import React from 'react';
-import TransactionList from './TransactionList';
+import TransactionList from './TransActionList';
 
 class BuyShares extends React.Component {
   constructor(props) {
@@ -50,45 +50,58 @@ class BuyShares extends React.Component {
     event.preventDefault();
     let cost = this.state.buyShares * this.props.currentPrice;
     let newFunds = this.state.funds - cost;
-    if (newFunds >= 0) {
-      this.setState({
-        funds: newFunds,
-        currentShares: this.state.currentShares + this.state.buyShares,
-        portfolio: [...this.state.portfolio, { symbol: this.props.symbol, shares: this.state.buyShares }]
-      });
 
-      await fetch('/api/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          holding_id: /* Obtain this ID based on your logic */,
-          transaction_type: 'BUY',
-          quantity: this.state.buyShares,
-          transaction_price: this.props.currentPrice
-        })
-      }).catch(error => console.error('Error posting transaction:', error));
+    if (newFunds >= 0) {
+      try {
+        const holdingId = await this.getOrCreateHoldingId();
+
+        this.setState({
+          funds: newFunds,
+          currentShares: this.state.currentShares + this.state.buyShares,
+          portfolio: [...this.state.portfolio, { symbol: this.props.symbol, shares: this.state.buyShares, holding_id: holdingId }]
+        });
+
+        await fetch('/api/transactions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            holding_id: holdingId,
+            transaction_type: 'BUY',
+            quantity: this.state.buyShares,
+            transaction_price: this.props.currentPrice
+          })
+        }).catch(error => console.error('Error posting transaction:', error));
+
+      } catch (error) {
+        console.error('Error handling buy submit:', error);
+      }
     }
   }
 
   handleSellSubmit = async (event) => {
     event.preventDefault();
     let stockIndex = this.state.portfolio.findIndex(item => item.symbol === this.props.symbol);
+
     if (stockIndex >= 0 && this.state.sellShares <= this.state.portfolio[stockIndex].shares) {
       let newFunds = this.state.funds + (this.state.sellShares * this.props.currentPrice);
       let updatedShares = this.state.portfolio[stockIndex].shares - this.state.sellShares;
       let updatedPortfolio = [...this.state.portfolio];
+
       if (updatedShares === 0) {
         updatedPortfolio.splice(stockIndex, 1);
       } else {
         updatedPortfolio[stockIndex].shares = updatedShares;
       }
+
       this.setState({
         funds: newFunds,
         currentShares: this.state.currentShares - this.state.sellShares,
         portfolio: updatedPortfolio
       });
+
+      const holdingId = this.state.portfolio[stockIndex].holding_id;
 
       await fetch('/api/transactions', {
         method: 'POST',
@@ -96,7 +109,7 @@ class BuyShares extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          holding_id: /* Obtain this ID based on your logic */,
+          holding_id: holdingId,
           transaction_type: 'SELL',
           quantity: this.state.sellShares,
           transaction_price: this.props.currentPrice
@@ -115,6 +128,31 @@ class BuyShares extends React.Component {
       })
       .then(data => this.setState({ transactions: data, showTransactions: true }))
       .catch(error => console.error('Error fetching transactions:', error));
+  }
+
+  getOrCreateHoldingId = async () => {
+    // Check if the stock symbol already exists in the portfolio
+    const existingHolding = this.state.portfolio.find(item => item.symbol === this.props.symbol);
+
+    if (existingHolding) {
+      return existingHolding.holding_id;
+    } else {
+      // Create a new holding_id if the stock is new
+      const response = await fetch('/api/create-holding-id', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ symbol: this.props.symbol })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error creating holding ID');
+      }
+
+      const data = await response.json();
+      return data.holding_id;
+    }
   }
 
   render() {
@@ -154,7 +192,6 @@ class BuyShares extends React.Component {
           <button className="" onClick={this.fetchTransactions}>Show Transactions</button>
         </div>
         <p>Funds: ${(this.state.funds).toFixed(2)}</p>
-        <PL funds={this.state.funds} />
         <p>Current Shares: {this.state.currentShares}</p>
         <p>
           Portfolio:{" "}
