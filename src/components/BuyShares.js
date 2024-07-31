@@ -1,6 +1,6 @@
 import React from 'react';
 import PL from './PL';
-import TransactionList from './TransActionList'; // Ensure correct import for TransactionList
+import TransactionList from './TransActionList';
 
 class BuyShares extends React.Component {
   constructor(props) {

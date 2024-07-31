@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BsFillMoonStarsFill } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebase-config'; // Correct path to firebase-config.js
+import { auth } from '../firebase-config';
 
 function Header() {
   const [lightMode, setLightMode] = useState(false);
