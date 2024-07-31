@@ -5,11 +5,13 @@ import { auth } from '../firebase-config';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import PhoneAuth from './PhoneAuth';
 import useAuth from './useAuth';
+
 const provider = new GoogleAuthProvider();
 
 const Signup = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showPhoneAuth, setShowPhoneAuth] = useState(false);
   const navigate = useNavigate();
@@ -23,9 +25,14 @@ const Signup = () => {
 
   const register = async (event) => {
     event.preventDefault();
+    if (registerPassword !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
     try {
       await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
       setErrorMessage("");
+      navigate('/home');
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -34,6 +41,7 @@ const Signup = () => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, provider);
+      navigate('/home');
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -59,7 +67,7 @@ const Signup = () => {
       </h1>
 
       {showPhoneAuth ? (
-        <PhoneAuth /> // Render PhoneAuth component if showPhoneAuth is true
+        <PhoneAuth />
       ) : (
         <form className="login__form" onSubmit={register}>
           <input
@@ -82,6 +90,8 @@ const Signup = () => {
             className="login__input"
             type="password"
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
           <div className="login__signup">
@@ -96,9 +106,11 @@ const Signup = () => {
         </form>
       )}
 
-      <button className="login__guest-button" onClick={handleGuestLogin}>
-        Continue as Guest
-      </button>
+      {!showPhoneAuth && (
+        <button className="login__guest-button" onClick={handleGuestLogin}>
+          Continue as Guest
+        </button>
+      )}
     </div>
   );
 };
