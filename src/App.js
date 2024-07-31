@@ -5,10 +5,8 @@ import Signup from './components/Signup';
 
 function App() {
     return (
-        <AuthProvider>
-            <Signup />
-            {/* Other components */}
-        </AuthProvider>
+
+<div></div>
     );
 }
 

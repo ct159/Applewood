@@ -15,7 +15,6 @@ function Header() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // Redirect or show a message after successful logout
       window.location.href = '/';
     } catch (error) {
       console.error('Logout Error:', error);
@@ -25,12 +24,11 @@ function Header() {
   return (
     <div className={`header__wrapper ${lightMode ? 'light' : 'dark'}`}>
       <div className="header__logo">
-        {/* Add logo or title here */}
       </div>
       <div className="header__menuItems">
         <BsFillMoonStarsFill onClick={toggleLightMode} />
         <Link to="/news">News</Link>
-        <button onClick={handleLogout}>Logout</button>
+        <button className="logout__button" onClick={handleLogout}>Logout</button>
       </div>
     </div>
   );

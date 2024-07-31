@@ -1,14 +1,13 @@
 import React from 'react';
 
-
 const TransactionList = ({ transactions }) => {
   return (
-    <div className="transaction__container">
-      <h2 className="transaction__title">Transactions</h2>
-      <ul className="transaction__list">
-        {transactions.map((transaction) => (
-          <li key={transaction.id} className="transaction__item">
-            Symbol: {transaction.symbol}, Price: {transaction.price}, Quantity: {transaction.quantity}
+    <div>
+      <h3>Transaction List</h3>
+      <ul>
+        {transactions.map((transaction, index) => (
+          <li key={index}>
+            {transaction.type} {transaction.shares} shares of {transaction.symbol} at ${transaction.price}
           </li>
         ))}
       </ul>

@@ -46,7 +46,7 @@ const PhoneAuth = () => {
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
           />
-          <button onClick={handleSendCode}>Send Verification Code</button>
+          <button className="login__guest-button" onClick={handleSendCode}>Send Verification Code</button>
         </>
       ) : (
         <>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PL from './PL';
-import TransactionList from './TransActionList';
+import TransactionList from './TransActionList'; // Ensure correct import for TransactionList
 
 class BuyShares extends React.Component {
   constructor(props) {
@@ -124,7 +124,10 @@ class BuyShares extends React.Component {
           />
           <button className="login__button" type="submit">Sell</button>
         </form>
-        <button className="reset__button" onClick={this.resetFunds}>Reset Funds</button>
+        <div className="buttons-container">
+          <button className="reset__button" onClick={this.resetFunds}>Reset Funds</button>
+          <button className="" onClick={this.fetchTransactions}>Show Transactions</button>
+        </div>
         <p>Funds: ${(this.state.funds).toFixed(2)}</p>
         <PL funds={this.state.funds} />
         <p>Current Shares: {this.state.currentShares}</p>
@@ -134,7 +137,6 @@ class BuyShares extends React.Component {
             <span key={index}>{symbol}: {shares} shares </span>
           ))}
         </p>
-        <button className="reset__button" onClick={this.fetchTransactions}>Show Transaction History</button>
         {this.state.showTransactions && <TransactionList transactions={this.state.transactions} />}
       </div>
     );

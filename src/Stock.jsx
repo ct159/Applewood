@@ -9,17 +9,22 @@ class Stock extends React.Component {
       stockPrice: null,
       stockSymbol: 'TSLA'
     };
+    this.intervalId = null;
   }
 
   componentDidMount() {
     this.fetchStock();
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.fetchStock();
-    }, 60000);
+    }, 100000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   fetchStock() {
-    const API_KEY = process.env.REACT_APP_API_KEY
+    const API_KEY = process.env.REACT_APP_API_KEY;
     const symbol = this.state.stockSymbol;
     const url = `https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=${symbol}`;
 
@@ -78,6 +83,9 @@ class Stock extends React.Component {
             />
             Applewood
           </h1>
+          <h2 className="stock__price">
+            {stockSymbol} - Current Price: {priceDisplay}
+          </h2>
           <form onSubmit={this.handleSubmit}>
             <input
               className="search__field"
@@ -90,9 +98,6 @@ class Stock extends React.Component {
               Submit
             </button>
           </form>
-          <h2 className="stock__price">
-            {stockSymbol} - Current Price: {priceDisplay}
-          </h2>
           <BuyShares
             currentPrice={stockPrice}
             symbol={stockSymbol}
@@ -101,7 +106,6 @@ class Stock extends React.Component {
       </>
     );
   }
-
 }
 
 export default Stock;

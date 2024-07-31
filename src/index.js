@@ -15,6 +15,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
+        <App/>
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/home' element={<Stock />} />
