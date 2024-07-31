@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { GoogleButton } from 'react-google-button';
 import { auth } from '../firebase-config';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import PhoneAuth from './PhoneAuth'; // Import PhoneAuth component
+import PhoneAuth from './PhoneAuth';
 import useAuth from './useAuth';
 const provider = new GoogleAuthProvider();
 
@@ -11,7 +11,7 @@ const Signup = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [showPhoneAuth, setShowPhoneAuth] = useState(false); // State to toggle phone authentication form
+  const [showPhoneAuth, setShowPhoneAuth] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 

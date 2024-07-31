@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App'; // This may not be needed if you are not using it
+import App from './App';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Stock from './Stock';
-import Header from './components/Header'; // This may not be needed if you are not using it
+import Header from './components/Header';
 import Signup from './components/Signup';
 import News from './components/News';
 import { AuthProvider } from './components/AuthContext';
